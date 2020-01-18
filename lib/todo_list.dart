@@ -16,6 +16,19 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
+  _updateTodo(todo, index) async {
+    final updatedTodo = await showDialog<Todo>(
+      context: context,
+      builder: (BuildContext context) {
+        return EditTodoDialog(todo: todo);
+      },
+    );
+
+    setState(() {
+      widget.todos[index] = updatedTodo;
+    });
+  }
+
   Widget _buildItem(BuildContext context, int index) {
     final todo = widget.todos[index];
 
@@ -36,18 +49,7 @@ class _TodoListState extends State<TodoList> {
           ),
         ),
         PopupMenuButton(
-          onSelected: (todo) async {
-            final updatedTodo = await showDialog<Todo>(
-              context: context,
-              builder: (BuildContext context) {
-                return EditTodoDialog(todo: todo);
-              },
-            );
-
-            setState(() {
-              widget.todos[index] = updatedTodo;
-            });
-          },
+          onSelected: (dynamic selected) => _updateTodo(todo, index),
           itemBuilder: (context) => [
             PopupMenuItem(
               value: todo,
