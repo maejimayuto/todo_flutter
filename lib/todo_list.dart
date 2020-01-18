@@ -7,15 +7,11 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  List<Todo> todos = [
-    Todo(title: 'Learn Dartasac'),
-    Todo(title: 'Try Flutter'),
-    Todo(title: 'Be amazed'),
-  ];
+  List<Todo> todos = [];
+
+  TextEditingController controller = new TextEditingController();
 
   _toggleTodo(Todo todo, bool isChecked) {
-    print('${todo.title} ${todo.isDone}');
-    print('mounted $mounted');
     setState(() {
       todo.isDone = isChecked;
     });
@@ -23,8 +19,6 @@ class _TodoListState extends State<TodoList> {
 
   Widget _buildItem(BuildContext context, int index) {
     final todo = todos[index];
-
-    print('mounted2 $mounted');
 
     return CheckboxListTile(
       value: todo.isDone,
@@ -37,16 +31,59 @@ class _TodoListState extends State<TodoList> {
 
   @override
   initState() {
-    print('mounted4 $mounted');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('mounted3 $mounted');
-    return ListView.builder(
-      itemBuilder:_buildItem,
-      itemCount: todos.length,
+    return Scaffold(
+      appBar: AppBar(title: Text('Todo List')),
+      body: ListView.builder(
+        itemBuilder:_buildItem,
+        itemCount: todos.length,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: _addTodo,
+      ),
+    );
+  }
+
+  _addTodo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('New todo'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }
+            ),
+            FlatButton(
+              child: Text('Add'),
+              onPressed: () {
+                setState(() {
+                  final todo = new Todo(title: controller.value.text);
+
+                  todos.add(todo);
+                  controller.clear();
+
+                  Navigator.of(context).pop();
+                });
+                print(controller.value.text);
+                controller.clear();
+              }
+            ),
+          ],
+        );
+      },
     );
   }
 }
