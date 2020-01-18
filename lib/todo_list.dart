@@ -29,6 +29,12 @@ class _TodoListState extends State<TodoList> {
     });
   }
 
+  _deleteTodo(index) {
+    setState(() {
+      widget.todos.removeAt(index);
+    });
+  }
+
   Widget _buildItem(BuildContext context, int index) {
     final todo = widget.todos[index];
 
@@ -49,15 +55,21 @@ class _TodoListState extends State<TodoList> {
           ),
         ),
         PopupMenuButton(
-          onSelected: (dynamic selected) => _updateTodo(todo, index),
+          onSelected: (dynamic selected) {
+            if (selected == 'edit') {
+              _updateTodo(todo, index);
+            } else if (selected == 'delete') {
+              _deleteTodo(index);
+            }
+          },
           itemBuilder: (context) => [
             PopupMenuItem(
-              value: todo,
+              value: 'edit',
               child: Text("edit"),
             ),
             // when user tap this item, `todo.title` can be deleted.
             PopupMenuItem(
-              value: todo,
+              value: 'delete',
               child: Text("delete"),
             ),
           ],
