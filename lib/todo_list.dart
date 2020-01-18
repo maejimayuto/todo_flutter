@@ -13,12 +13,35 @@ class TodoList extends StatelessWidget {
   Widget _buildItem(BuildContext context, int index) {
     final todo = todos[index];
 
-    return CheckboxListTile(
-      value: todo.isDone,
-      title: Text(todo.title),
-      onChanged: (bool isChecked) {
-        onTodoToggle(todo, isChecked);
-      },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          child: Row(
+            children: <Widget>[
+              Checkbox(
+                value: todo.isDone,
+                onChanged: (bool isChecked) {
+                  onTodoToggle(todo, isChecked);
+                },
+              ),
+              Text(todo.title),
+            ],
+          ),
+        ),
+        PopupMenuButton<int>(
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 1,
+              child: Text("edit"),
+            ),
+            PopupMenuItem(
+              value: 2,
+              child: Text("delete"),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
