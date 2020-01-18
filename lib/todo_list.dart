@@ -5,14 +5,19 @@ import 'package:todo_flutter/todo.dart';
 
 typedef ToggleTodoCallback = void Function(Todo, bool);
 
-class TodoList extends StatelessWidget {
-  TodoList({@required this.todos, this.onTodoToggle});
-
+class TodoList extends StatefulWidget {
   final List<Todo> todos;
   final ToggleTodoCallback onTodoToggle;
 
+  const TodoList({this.todos, this.onTodoToggle});
+
+  @override
+  _TodoListState createState() => _TodoListState();
+}
+
+class _TodoListState extends State<TodoList> {
   Widget _buildItem(BuildContext context, int index) {
-    final todo = todos[index];
+    final todo = widget.todos[index];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -23,7 +28,7 @@ class TodoList extends StatelessWidget {
               Checkbox(
                 value: todo.isDone,
                 onChanged: (bool isChecked) {
-                  onTodoToggle(todo, isChecked);
+                  widget.onTodoToggle(todo, isChecked);
                 },
               ),
               Text(todo.title),
@@ -32,16 +37,18 @@ class TodoList extends StatelessWidget {
         ),
         PopupMenuButton(
           onSelected: (todo) async {
-            todos[index] = await showDialog<Todo>(
+            final updatedTodo = await showDialog<Todo>(
               context: context,
               builder: (BuildContext context) {
                 return EditTodoDialog(todo: todo);
               },
             );
-            print(todos[index].title);
+
+            setState(() {
+              widget.todos[index] = updatedTodo;
+            });
           },
           itemBuilder: (context) => [
-            // when user tap this item, `todo.title` can be changed.
             PopupMenuItem(
               value: todo,
               child: Text("edit"),
@@ -61,7 +68,7 @@ class TodoList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: _buildItem,
-      itemCount: todos.length,
+      itemCount: widget.todos.length,
     );
   }
 }
