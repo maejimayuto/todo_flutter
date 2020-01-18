@@ -12,7 +12,7 @@ class NewTodoDialog extends StatelessWidget {
       content: TextField(
         controller: controller,
         autofocus: true,
-        ),
+      ),
       actions: <Widget>[
         FlatButton(
           child: Text('Cancel'),
