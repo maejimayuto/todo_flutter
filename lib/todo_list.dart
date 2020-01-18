@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:todo_flutter/edit_todo_dialog.dart';
 import 'package:todo_flutter/todo.dart';
 
 typedef ToggleTodoCallback = void Function(Todo, bool);
@@ -29,14 +30,25 @@ class TodoList extends StatelessWidget {
             ],
           ),
         ),
-        PopupMenuButton<int>(
+        PopupMenuButton(
+          onSelected: (todo) async {
+            todos[index] = await showDialog<Todo>(
+              context: context,
+              builder: (BuildContext context) {
+                return EditTodoDialog(todo: todo);
+              },
+            );
+            print(todos[index].title);
+          },
           itemBuilder: (context) => [
+            // when user tap this item, `todo.title` can be changed.
             PopupMenuItem(
-              value: 1,
+              value: todo,
               child: Text("edit"),
             ),
+            // when user tap this item, `todo.title` can be deleted.
             PopupMenuItem(
-              value: 2,
+              value: todo,
               child: Text("delete"),
             ),
           ],
