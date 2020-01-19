@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
 
 import 'package:todo_flutter/todo_list_screen.dart';
 
 void main() {
-  // SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
