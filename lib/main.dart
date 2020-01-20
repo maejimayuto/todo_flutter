@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-
-import 'package:todo_flutter/todo_list_screen.dart';
+import 'package:todo_flutter/services/authentication.dart';
+import 'package:todo_flutter/pages/root_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Todo List',
-      home: TodoListScreen(),
-    );
+    return new MaterialApp(
+        title: 'Flutter login demo',
+        debugShowCheckedModeBanner: false,
+        theme: new ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: new RootPage(auth: new Auth()));
   }
 }
