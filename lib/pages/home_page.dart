@@ -1,8 +1,9 @@
+// import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/services/authentication.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_flutter/models/todo.dart';
-import 'dart:async';
+// import 'dart:async';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -19,14 +20,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Todo> _todoList;
 
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  final Firestore _database = Firestore.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final _textEditingController = TextEditingController();
-  StreamSubscription<Event> _onTodoAddedSubscription;
-  StreamSubscription<Event> _onTodoChangedSubscription;
+  // StreamSubscription<Event> _onTodoAddedSubscription;
+  // StreamSubscription<Event> _onTodoChangedSubscription;
 
-  Query _todoQuery;
+  // Query _todoQuery;
 
   //bool _isEmailVerified = false;
 
@@ -37,14 +38,13 @@ class _HomePageState extends State<HomePage> {
     //_checkEmailVerification();
 
     _todoList = new List();
-    _todoQuery = _database
-        .reference()
-        .child("todo")
-        .orderByChild("userId")
-        .equalTo(widget.userId);
-    _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
-    _onTodoChangedSubscription =
-        _todoQuery.onChildChanged.listen(onEntryChanged);
+    // _todoQuery = _database
+    //     .collection("books")
+    //     .orderBy("userId")
+    //     .where("userID", isEqualTo: widget.userId);
+    // _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
+    // _onTodoChangedSubscription =
+    //     _todoQuery.onChildChanged.listen(onEntryChanged);
   }
 
 //  void _checkEmailVerification() async {
@@ -110,27 +110,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _onTodoAddedSubscription.cancel();
-    _onTodoChangedSubscription.cancel();
+    // _onTodoAddedSubscription.cancel();
+    // _onTodoChangedSubscription.cancel();
     super.dispose();
   }
 
-  onEntryChanged(Event event) {
-    var oldEntry = _todoList.singleWhere((entry) {
-      return entry.key == event.snapshot.key;
-    });
+  // onEntryChanged(Event event) {
+  //   var oldEntry = _todoList.singleWhere((entry) {
+  //     return entry.key == event.snapshot.key;
+  //   });
 
-    setState(() {
-      _todoList[_todoList.indexOf(oldEntry)] =
-          Todo.fromSnapshot(event.snapshot);
-    });
-  }
+  //   setState(() {
+  //     _todoList[_todoList.indexOf(oldEntry)] =
+  //         Todo.fromSnapshot(event.snapshot);
+  //   });
+  // }
 
-  onEntryAdded(Event event) {
-    setState(() {
-      _todoList.add(Todo.fromSnapshot(event.snapshot));
-    });
-  }
+  // onEntryAdded(Event event) {
+  //   setState(() {
+  //     _todoList.add(Todo.fromSnapshot(event.snapshot));
+  //   });
+  // }
 
   signOut() async {
     try {
@@ -144,25 +144,25 @@ class _HomePageState extends State<HomePage> {
   addNewTodo(String todoItem) {
     if (todoItem.length > 0) {
       Todo todo = new Todo(todoItem.toString(), widget.userId, false);
-      _database.reference().child("todo").push().set(todo.toJson());
+      _database.collection("todo").document().setData(todo.toJson());
     }
   }
 
   updateTodo(Todo todo) {
     //Toggle completed
-    todo.completed = !todo.completed;
-    if (todo != null) {
-      _database.reference().child("todo").child(todo.key).set(todo.toJson());
-    }
+    // todo.completed = !todo.completed;
+    // if (todo != null) {
+    //   _database.reference().child("todo").child(todo.key).set(todo.toJson());
+    // }
   }
 
   deleteTodo(String todoId, int index) {
-    _database.reference().child("todo").child(todoId).remove().then((_) {
-      print("Delete $todoId successful");
-      setState(() {
-        _todoList.removeAt(index);
-      });
-    });
+    // _database.reference().child("todo").child(todoId).remove().then((_) {
+    //   print("Delete $todoId successful");
+    //   setState(() {
+    //     _todoList.removeAt(index);
+    //   });
+    // });
   }
 
   showAddTodoDialog(BuildContext context) async {
