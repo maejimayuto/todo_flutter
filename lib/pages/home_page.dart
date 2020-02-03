@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   // StreamSubscription<Event> _onTodoAddedSubscription;
   // StreamSubscription<Event> _onTodoChangedSubscription;
 
-  // Query _todoQuery;
+  Query _todoQuery;
 
   //bool _isEmailVerified = false;
 
@@ -38,13 +38,31 @@ class _HomePageState extends State<HomePage> {
     //_checkEmailVerification();
 
     _todoList = new List();
-    // _todoQuery = _database
-    //     .collection("books")
-    //     .orderBy("userId")
-    //     .where("userID", isEqualTo: widget.userId);
+    _todoQuery = _database
+        .collection("todo")
+        .where("userId", isEqualTo: widget.userId);
+
+    // _todoQuery.snapshots().getDocuments();
+    // _todoQuery.snapshots().map((qss) => {
+    //   qss.documents();
+    // });
+    // _todoList.add(Todo.fromSnapshot(_todoQuery.getDocuments().documents())
+
+    // _todoList.add(
+    //   _todoQuery.getDocuments()
+    //     .then((QuerySnapshot snapshot) {
+    //       snapshot.documents.forEach((f) => print('${f.data}'));
+    //     });
+    // );
     // _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
     // _onTodoChangedSubscription =
     //     _todoQuery.onChildChanged.listen(onEntryChanged);
+  }
+
+  void _getDotoList() {
+    _todoQuery.getDocuments().then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) => print('${f.data}'));
+    });
   }
 
 //  void _checkEmailVerification() async {
@@ -206,7 +224,7 @@ class _HomePageState extends State<HomePage> {
           shrinkWrap: true,
           itemCount: _todoList.length,
           itemBuilder: (BuildContext context, int index) {
-            String todoId = _todoList[index].key;
+            String todoId = _todoList[index].id;
             String subject = _todoList[index].subject;
             bool completed = _todoList[index].completed;
             // String userId = _todoList[index].userId;
@@ -260,7 +278,8 @@ class _HomePageState extends State<HomePage> {
         body: showTodoList(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            showAddTodoDialog(context);
+            // showAddTodoDialog(context);
+            _getDotoList();
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),
